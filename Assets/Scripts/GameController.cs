@@ -25,14 +25,26 @@ public class GameController : MonoBehaviour {
         Parallax();
     }
 
-    void Parallax()
+    /*void Parallax()
     {
         float finalSpeed = parallaxVelocidad * Time.deltaTime;
         mountains.uvRect = new Rect(mountains.uvRect.x + finalSpeed, 0f, 1f, 1f);
         float finalSpeedGraves = (parallaxVelocidad +0.05f)* Time.deltaTime;
         graves.uvRect = new Rect(graves.uvRect.x + finalSpeedGraves, 0f, 1f, 1f);
 
+    }*/
+
+    Transform GetCameraTransform()
+    {
+        return this.GetComponentInParent<Transform>();
     }
+
+    void Parallax()
+    {
+        mountains.uvRect = new Rect(this.GetCameraTransform().position.x * 0.025f, 0f, 1f, 1f);
+        graves.uvRect = new Rect(this.GetCameraTransform().position.x * 0.04f, 0f, 1f, 1f);
+    }
+
 
     public void IncreasePoint(int i)
     {

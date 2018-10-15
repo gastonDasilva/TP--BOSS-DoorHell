@@ -8,14 +8,18 @@ public class PlayerController : MonoBehaviour {
     public float speed ;
     public float jumpPower = 6.5f;
     public GameObject game;
+    public GameObject healhtbar;
 
     private Rigidbody2D rb2d;
     private Animator anim;
     private bool jump;
+    private bool movement= true;
+    private SpriteRenderer sprt;
     // Use this for initialization
     void Start () {
         rb2d = GetComponent<Rigidbody2D>(); // detecta automaticamente el rigidbody
         anim = GetComponent<Animator>();// detecta automaticamente el animator, para gestionar las animaciones
+        sprt = GetComponent<SpriteRenderer>();
     }
 	
 	// Update is called once per frame
@@ -38,6 +42,8 @@ public class PlayerController : MonoBehaviour {
         }
 
         float h = Input.GetAxis("Horizontal"); // para detectar la flechas que se aprientan, -1 para <- y 1 para ->
+        if (!movement) h = 0; // gestiona que el personaje no pueda moverse si recibe daño
+
 
         rb2d.AddForce(Vector2.right * speed * h);
 
@@ -94,7 +100,9 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("Player Esta Atacando");
             ememy.SendMessage("EnemigoMuerto");
         }
-        else { Debug.Log("Player NOOO Esta Atacando"); }
+        else {
+            /*EnemyKnockBack(ememy.transform.position.x);*/
+            Debug.Log("Player NOOO Esta Atacando"); }
 
         //game.SendMessage("IncreasePoint", transform.position.y);
     }
@@ -110,13 +118,29 @@ public class PlayerController : MonoBehaviour {
         {
             Debug.Log("Choco con Una Moneda");
             collision.gameObject.transform.parent.SendMessage("CantidadDePuntosPorMonedas",game);
-           // game.SendMessage("IncreasePoint");
-
             collision.gameObject.transform.parent.SendMessage("GestionarRecoleccion");
             //collision.gameObject.SendMessage("GestionarRecoleccion");
             // Invoke("DestroyCoin", 0.6f, collision.gameObject);
             //DestroyCoin(collision.gameObject);
         }
+    }
+
+    public void  EnemyKnockBack(float enemyPosx)
+    {
+        jump = true;
+        float side = Mathf.Sign(enemyPosx - transform.position.x);
+        rb2d.AddForce(Vector2.left *side * jumpPower, ForceMode2D.Impulse); // Fisica del SALTO para atras 
+        movement = false;
+        Invoke("EnableMovement", 1f);
+        Color colour = new Color(19f,111f,60f);
+        sprt.color = Color.red;
+        healhtbar.SendMessage("RecibirDanho", 2f);
+    }
+
+    public void EnableMovement()
+    {
+        movement = true;
+        sprt.color = Color.white;
     }
 
     void OnBecameInvisible()

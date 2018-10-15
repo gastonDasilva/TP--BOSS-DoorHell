@@ -58,7 +58,8 @@ public class CoinController : MonoBehaviour {
         /*CircleCollider2D col = this.gameObject.GetComponent<CircleCollider2D>();
         col.enabled = true;*/
 
-        Invoke("DestroyCoin", 0.6f);
+        //Invoke("DestroyCoin", 0f);
+        DestroyCoin();
     }
 
     void DestroyCoin()
