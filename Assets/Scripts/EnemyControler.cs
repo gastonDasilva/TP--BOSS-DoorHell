@@ -15,10 +15,12 @@ public class EnemyControler : MonoBehaviour {
     private Rigidbody2D rb2d;
     private Animator anim;
     private bool precipicio = false;
+    private PolygonCollider2D polcol;
     // Use this for initialization
     void Start () {
         rb2d = GetComponent<Rigidbody2D>(); // detecta automaticamente el rigidbody
         anim = GetComponent<Animator>();// detecta automaticamente el animator, para gestionar las animaciones
+        polcol = GetComponentInChildren<PolygonCollider2D>();
     }
 	
 	// Update is called once per frame
@@ -88,6 +90,7 @@ public class EnemyControler : MonoBehaviour {
         AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
         rb2d.bodyType = RigidbodyType2D.Static;
+        
         if (!(stateInfo.IsName("Enemy_Die")))
         {
             GeneratorCoins();
@@ -96,6 +99,7 @@ public class EnemyControler : MonoBehaviour {
         //audioEnemy.clip = clipEnemyDie;
         //audioEnemy.Play();
         Invoke("DestroyEnemy", 1f);
+        polcol.enabled = !polcol.enabled; // desactiva la colision contra el player 
     }
 
     void DestroyEnemy()
