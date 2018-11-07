@@ -8,8 +8,10 @@ public class GameController : MonoBehaviour {
     public RawImage graves;
     public float parallaxVelocidad = 0.02f;
     public Text pointText;
+    public Text pointTextRuby;
 
     private int points = 0;
+    private int pointsRuby = 0;
     // Use this for initialization
     void Start () {
 		
@@ -48,8 +50,17 @@ public class GameController : MonoBehaviour {
 
     public void IncreasePoint(int i)
     {
-        points += i;
-        pointText.text = points.ToString();
+        if (i == 6)
+        {
+            pointsRuby += 1;
+            pointTextRuby.text = pointsRuby.ToString();
+        }
+        else {
+            points += i;
+            pointText.text = points.ToString();
+        }
+        
+
         //SaveScore(points);
     }
 }

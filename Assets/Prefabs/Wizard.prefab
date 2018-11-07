@@ -11,6 +11,22 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1959146364844552}
   m_IsPrefabAsset: 1
+--- !u!1 &1948405361827538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4042669972736196}
+  - component: {fileID: 60587459072987282}
+  m_Layer: 0
+  m_Name: PlayerCollider
+  m_TagString: Wizard
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1959146364844552
 GameObject:
   m_ObjectHideFlags: 0
@@ -23,6 +39,7 @@ GameObject:
   - component: {fileID: 95926249663211158}
   - component: {fileID: 58919636093382416}
   - component: {fileID: 50338949136713984}
+  - component: {fileID: 114345097265904132}
   m_Layer: 9
   m_Name: Wizard
   m_TagString: Wizard
@@ -37,10 +54,24 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1959146364844552}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.292609, y: -4.31, z: 0}
+  m_LocalPosition: {x: 66.66, y: -2.59, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4042669972736196}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4042669972736196
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1948405361827538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 4012949036328820}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &50338949136713984
@@ -50,7 +81,7 @@ Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1959146364844552}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -69,7 +100,7 @@ CircleCollider2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1959146364844552}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -78,6 +109,41 @@ CircleCollider2D:
   m_Offset: {x: -0.13543415, y: 0.8313856}
   serializedVersion: 2
   m_Radius: 0.4794712
+--- !u!60 &60587459072987282
+PolygonCollider2D:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1948405361827538}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.257164, y: 0.6221323}
+      - {x: 0.23414612, y: 1.2025236}
+      - {x: -0.15676117, y: 1.3657817}
+      - {x: -0.4807663, y: 1.1276708}
+      - {x: -0.4834137, y: 0.6235249}
+      - {x: -0.8834152, y: 0.009701014}
+      - {x: -0.69229126, y: -0.8961079}
+      - {x: -0.11820984, y: -1.3427455}
+      - {x: 0.404274, y: -0.7994876}
+      - {x: 0.64003754, y: -0.060035944}
+      - {x: 0.56785583, y: 0.18709016}
 --- !u!95 &95926249663211158
 Animator:
   serializedVersion: 3
@@ -96,6 +162,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114345097265904132
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1959146364844552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b6e65a6e1a28445a82758a42798f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radiusVision: 10
+  speed: 3
+  attackRadius: 6
+  PrefabBallAcid: {fileID: 1327563262395216, guid: b3640e821a357eb49bc4ccc5c7baa917,
+    type: 2}
+  coinPreFab05: {fileID: 1419531094548002, guid: 0899348c9aa441043a4d928f297d30aa,
+    type: 2}
+  coinPreFab04: {fileID: 1426550692278892, guid: 0ecff59eb44336543a9e04b3dd039dee,
+    type: 2}
+  rubyPreFab: {fileID: 1837898432426164, guid: b9aab3fc769b7c44e94cf59a32bb35cd, type: 2}
 --- !u!212 &212580161069309042
 SpriteRenderer:
   m_ObjectHideFlags: 1

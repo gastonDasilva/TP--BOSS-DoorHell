@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerController : MonoBehaviour {
     public bool grounded;
     public float maxSpeed ;
@@ -9,17 +10,26 @@ public class PlayerController : MonoBehaviour {
     public float jumpPower = 6.5f;
     public GameObject game;
     public GameObject healhtbar;
+    public GameObject Manabar;
+    public GameObject ballFire;
+    public Camera mainCamera; 
 
+    private ParticleSystem particleSys;
     private Rigidbody2D rb2d;
     private Animator anim;
     private bool jump;
+    private bool poseeMana = true;
     private bool movement= true;
+    private bool sigueEnvenenado = false;
     private SpriteRenderer sprt;
+    
     // Use this for initialization
     void Start () {
         rb2d = GetComponent<Rigidbody2D>(); // detecta automaticamente el rigidbody
         anim = GetComponent<Animator>();// detecta automaticamente el animator, para gestionar las animaciones
         sprt = GetComponent<SpriteRenderer>();
+        particleSys = GetComponentInChildren<ParticleSystem>();
+        particleSys.Stop();
     }
 	
 	// Update is called once per frame
@@ -34,13 +44,28 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate()
     {
+        CorreccionDeVelocidad();
+        Movimientos();
+        EfectuarSaltoSiDebe();
+        EfectuarAtaqueSiDebe();
+        EfectuarAtaqueDeFuegoSiDebe();
+
+        EnvenenarJugadorSiDebe();
+    }
+
+    public void CorreccionDeVelocidad()
+    {
         Vector3 fixedVelocity = rb2d.velocity;// Para corregir la frision provista por el materials 2D
         fixedVelocity.x *= 0.75f;
         if (grounded)
         {
             rb2d.velocity = fixedVelocity;
         }
+    }
 
+
+    public void Movimientos()
+    {
         float h = Input.GetAxis("Horizontal"); // para detectar la flechas que se aprientan, -1 para <- y 1 para ->
         if (!movement) h = 0; // gestiona que el personaje no pueda moverse si recibe daño
 
@@ -51,22 +76,68 @@ public class PlayerController : MonoBehaviour {
         rb2d.velocity = new Vector2(limitedSpeed, rb2d.velocity.y);
 
         cambiarDireccion(h);
+    }
 
+    public void EfectuarSaltoSiDebe()
+    {
         if (jump)
         {
             rb2d.velocity = new Vector2(rb2d.velocity.x, 0);
             rb2d.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse); // Fisica del SALTO
             jump = false;
         }
+    }
 
+
+    private bool PlayerEnModoAtaque()
+    {/* Devuelvo un booleano indicando si el player esta en modo Ataque*/
         AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
         bool ataca = stateInfo.IsName("Player_Attack");
+        return ataca;
+    }
+    void EfectuarAtaqueSiDebe()
+    {
+        bool ataca = PlayerEnModoAtaque();
         if (Input.GetMouseButtonDown(0) && ataca != true) // Detecta el click del boton derecho y efectua un ataque
         {
+            movement = false;
+            //ActivarDetectorParaAtaque();
             //UpdateState("Player_Attack");
             anim.SetTrigger("Attacking");
 
+            Invoke("EnableMovement", 0.46f);
+            //Invoke("ActivarDetectorParaAtaque", 0.46f);
         }
+    }
+
+    public void EfectuarAtaqueDeFuegoSiDebe()
+    {
+        bool ataca = PlayerEnModoAtaque();
+        if (Input.GetMouseButtonDown(1) && ataca != true && poseeMana) // Detecta el click del boton derecho y efectua un ataque
+        {
+            movement = false;
+            //ActivarDetectorParaAtaque();
+            //UpdateState("Player_Attack");
+            anim.SetTrigger("Attacking");
+            CreationBallFire();
+            Manabar.SendMessage("DisminuirMana", 25f);
+
+            Invoke("EnableMovement", 0.46f);
+            //Invoke("ActivarDetectorParaAtaque", 0.46f);
+        }
+    }
+
+    public void NohayMasMana()
+    {
+        poseeMana = false;
+    }
+
+    void ActivarDetectorParaAtaque()
+    {
+        PolygonCollider2D colAttack = gameObject.GetComponentInChildren<PolygonCollider2D>();
+        colAttack.enabled = !colAttack.enabled;
+
+
     }
 
     void cambiarDireccion(float h)
@@ -92,13 +163,11 @@ public class PlayerController : MonoBehaviour {
 
     public void EstoyAtacando(GameObject ememy)
     {
-        // devuelvo un booleano indicando si el player esta en modo Ataque
-        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-        bool ataca = stateInfo.IsName("Player_Attack");
+        bool ataca = PlayerEnModoAtaque();
         if (ataca)
         {
             Debug.Log("Player Esta Atacando");
-            ememy.SendMessage("EnemigoMuerto");
+            ememy.transform.parent.SendMessage("EnemigoMuerto");
         }
         else {
             /*EnemyKnockBack(ememy.transform.position.x);*/
@@ -109,38 +178,123 @@ public class PlayerController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Wizard")
         {
             Debug.Log("Choco con Un Enemigo");
+            this.EstoyAtacando(collision.gameObject);
             //healhtbar.SendMessage("RecibirDanho", 2f);
         }
         if (collision.gameObject.tag == "Coin")
         {
-            Debug.Log("Choco con Una Moneda");
             collision.gameObject.transform.parent.SendMessage("CantidadDePuntosPorMonedas",game);
             collision.gameObject.transform.parent.SendMessage("GestionarRecoleccion");
-            //collision.gameObject.SendMessage("GestionarRecoleccion");
-            // Invoke("DestroyCoin", 0.6f, collision.gameObject);
-            //DestroyCoin(collision.gameObject);
+            Debug.Log("Coin!!!");
+        }
+
+        if (collision.gameObject.tag == "BallAcid")
+        {
+            DestruirAtaqueEnemigoSiDebe(collision.gameObject);
+        }
+
+        /*if (collision.gameObject.tag == "Wizard")
+        {
+            Debug.Log("Choco con Un Enemigo");
+            this.EstoyAtacando(collision.gameObject);
+            //healhtbar.SendMessage("RecibirDanho", 2f);
+        }*/
+    }
+
+    public void DestruirAtaqueEnemigoSiDebe(GameObject enemyAttack)
+    { /* Por lo general el enemyAttack suele ser algun poder que el enemigo libera,
+        por ahora solo existen las ballsAcid.
+        */
+        bool ataca = PlayerEnModoAtaque();
+        if (ataca)
+        {
+            enemyAttack.SendMessage("BallDestroy");
+
         }
     }
 
-    public void  EnemyKnockBack(float enemyPosx)
+    public void  EnemyKnockBack( GameObject enemy)
     {
         jump = true;
+        float enemyPosx = enemy.transform.position.x;
+        EnemyControler enemyctr = enemy.GetComponent<EnemyControler>();
         float side = Mathf.Sign(enemyPosx - transform.position.x);
         rb2d.AddForce(Vector2.left *side * jumpPower, ForceMode2D.Impulse); // Fisica del SALTO para atras 
         movement = false;
         Invoke("EnableMovement", 1f);
         Color colour = new Color(19f,111f,60f);
         sprt.color = Color.red;
-        healhtbar.SendMessage("RecibirDanho", 2f);
+
+
+        if (enemyctr.tipoDeEnemigo == 1)
+        {
+            // healhtbar.SendMessage("RecibirDanho", 4f);
+            RecibirDanho(4f);
+            EfecuarEnvenamientoPorUnTiempo(6f);
+        }
+        RecibirDanho(2f);
+        //healhtbar.SendMessage("RecibirDanho", 2f);
+    }
+
+    public void EfecuarEnvenamientoPorUnTiempo(float tiempo)
+    {
+        InciarEnvenenamiento();
+        Invoke("DejarDeEnvenenar", tiempo);
+    }
+
+    public void RecibirDanho(float danho)
+    {
+        healhtbar.SendMessage("RecibirDanho", danho);
+        ProducirAturdimientoDeCamera();
+    }
+
+    public void ProducirAturdimientoDeCamera()
+    {
+        CameraShake camaraShake = mainCamera.GetComponent<CameraShake>();
+        camaraShake.Shake(0.06f, 0.2f);
+    }
+
+    public void DejarDeEnvenenar()
+    {/*Inicia la gestion de Parar el envenamiento del player*/
+        sigueEnvenenado = false;
+        healhtbar.SendMessage("CambiarColor", Color.white);
+        particleSys.Stop();
+    }
+
+    public void InciarEnvenenamiento()
+    {/*Inicia la gestion de envenamiento del player*/
+        ProducirAturdimientoDeCamera();
+        particleSys.Play();
+        sigueEnvenenado = true;
+        healhtbar.SendMessage("CambiarColor", Color.green);
+    }
+
+   public void EnvenenarJugadorSiDebe()
+    {/*Si el envenamiento continua se le va sacando vida al player */
+        if(sigueEnvenenado) healhtbar.SendMessage("RecibirDanho", 0.050f);
     }
 
     public void EnableMovement()
     {
         movement = true;
         sprt.color = Color.white;
+    }
+
+
+    void CreationBallFire()
+    {// Objeto a Instanciar, posicion actual del gameObject, variable necesaria para el instantiate
+        Vector3 transformUpdate = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+
+
+        GameObject instantiateBall =  Instantiate(ballFire, transformUpdate, Quaternion.identity);
+
+        BallController ballObject = instantiateBall.GetComponent<BallController>();
+
+        ballObject.mov = transform.localScale;
+
     }
 
     void OnBecameInvisible()

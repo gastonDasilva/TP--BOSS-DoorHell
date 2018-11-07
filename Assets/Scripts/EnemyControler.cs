@@ -10,6 +10,7 @@ public class EnemyControler : MonoBehaviour {
     public GameObject CoinPreFab03 = null;
     public GameObject CoinPreFab04 = null;
     public GameObject CoinPreFab05 = null;
+    public int tipoDeEnemigo;
 
 
     private Rigidbody2D rb2d;
@@ -74,15 +75,20 @@ public class EnemyControler : MonoBehaviour {
 
         if (collision.gameObject.tag == "Jugador")
         {
-            Debug.Log("Choco con el player");
-            collision.gameObject.SendMessage("EnemyKnockBack", this.gameObject.transform.position.x);
+           // Debug.Log("Choco con el player");
+            collision.gameObject.SendMessage("EnemyKnockBack", this.gameObject);
         }
 
         if (collision.gameObject.tag == "JugadorAtaque")
         {
             Debug.Log("Enemido en el punto para atacar");
-            collision.gameObject.transform.parent.SendMessage("EstoyAtacando", this.gameObject);
+            //collision.gameObject.transform.parent.SendMessage("EstoyAtacando", this.gameObject);
         }
+        if (collision.gameObject.tag == "BallFire")
+        {
+            EnemigoMuerto();
+        }
+        
     }
 
     void EnemigoMuerto()

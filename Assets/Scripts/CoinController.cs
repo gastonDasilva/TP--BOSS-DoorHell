@@ -45,11 +45,19 @@ public class CoinController : MonoBehaviour {
             case 5:
                 game.SendMessage("IncreasePoint", 5);
                 return 5;
+            case 6:
+                GestionDeObtencionDeCoinRuby(game,6);
+                return 6;
             default:
                 break;
         }
         game.SendMessage("IncreasePoint", 5);
         return 5;
+    }
+
+    public void GestionDeObtencionDeCoinRuby(GameObject game, int coinType)
+    {
+        game.SendMessage("IncreasePoint", coinType);
     }
 
     public void GestionarRecoleccion()

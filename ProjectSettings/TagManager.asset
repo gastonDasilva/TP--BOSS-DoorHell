@@ -11,6 +11,8 @@ TagManager:
   - Coin
   - JugadorAtaque
   - Wizard
+  - BallFire
+  - BallAcid
   layers:
   - Default
   - TransparentFX
