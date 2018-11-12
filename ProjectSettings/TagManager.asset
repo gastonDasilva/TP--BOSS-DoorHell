@@ -13,6 +13,7 @@ TagManager:
   - Wizard
   - BallFire
   - BallAcid
+  - Estatua
   layers:
   - Default
   - TransparentFX

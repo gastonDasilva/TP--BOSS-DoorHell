@@ -9,9 +9,15 @@ public class GameController : MonoBehaviour {
     public float parallaxVelocidad = 0.02f;
     public Text pointText;
     public Text pointTextRuby;
+    public Text cantTextPocionVida;
+    public Text cantTextPocionMana;
+    public GameObject healhtbar;
+    public GameObject Manabar;
 
     private int points = 0;
     private int pointsRuby = 0;
+    private int cantspocionVida = 0;
+    private int cantspocionMana = 0;
     // Use this for initialization
     void Start () {
 		
@@ -62,5 +68,78 @@ public class GameController : MonoBehaviour {
         
 
         //SaveScore(points);
+    }
+
+    public void ObtenerPocionDeVidaSiPuede()
+    {
+        if (points >= 15)
+        {
+            cantspocionVida += 1;
+            cantTextPocionVida.text = cantspocionVida.ToString();
+            Debug.Log("Puntos:" + points);
+            points = points - 15;
+            pointText.text = points.ToString();
+            Debug.Log("PuntosDespues:" + points);
+
+        }
+        else { Debug.Log("No tienes suficiente Dinero Para comprar ese Item"); }
+    }
+
+    public void ObtenerMonedaACambioDeUnRubySiPuede()
+    {
+        if (pointsRuby >= 1)
+        {
+            pointsRuby -= 1;
+            pointTextRuby.text = pointsRuby.ToString();
+            points += 20;
+            pointText.text = points.ToString();
+        }
+        else
+        {
+            Debug.Log("No tienes suficientes Rubys Para comprar ese Item");
+        }
+    }
+
+    public void ObtenerPocionDeManaSiPuede()
+    {
+        if (points >= 10)
+        {
+            cantspocionMana += 1;
+            cantTextPocionMana.text = cantspocionMana.ToString();
+            points = points - 10;
+            pointText.text = points.ToString();
+
+        }
+        else { Debug.Log("No tienes suficiente Dinero Para comprar ese Item"); 
+        }
+    }
+
+    public void CurarPlayerSiDebe()
+    {
+        if (cantspocionVida >= 1)
+        {
+            healhtbar.SendMessage("Curar");
+            cantspocionVida -= 1;
+            cantTextPocionVida.text = cantspocionVida.ToString();
+
+        }
+        else
+        {
+            Debug.Log("No tenes Pociones de Vida, Pedazo de tontin");
+        }
+    }
+
+    public void RegenerarMana()
+    {
+        if (cantspocionMana >=1)
+        {
+            Manabar.SendMessage("Curar");
+            cantspocionMana -= 1;
+            cantTextPocionMana.text = cantspocionMana.ToString();
+        }
+        else
+        {
+            Debug.Log("No tenes Pociones de Mana, Wacho");
+        }
     }
 }

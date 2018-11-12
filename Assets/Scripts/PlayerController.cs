@@ -5,35 +5,39 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
     public bool grounded;
-    public float maxSpeed ;
-    public float speed ;
+    public float maxSpeed;
+    public float speed;
     public float jumpPower = 6.5f;
     public GameObject game;
     public GameObject healhtbar;
     public GameObject Manabar;
     public GameObject ballFire;
-    public Camera mainCamera; 
+    public Camera mainCamera;
+    public GameObject shoppigCanvas;
 
     private ParticleSystem particleSys;
     private Rigidbody2D rb2d;
     private Animator anim;
     private bool jump;
     private bool poseeMana = true;
-    private bool movement= true;
+    private bool movement = true;
     private bool sigueEnvenenado = false;
+    private bool puedeComprar;
+    private bool estaComprando;
     private SpriteRenderer sprt;
-    
+
+
     // Use this for initialization
-    void Start () {
+    void Start() {
         rb2d = GetComponent<Rigidbody2D>(); // detecta automaticamente el rigidbody
         anim = GetComponent<Animator>();// detecta automaticamente el animator, para gestionar las animaciones
         sprt = GetComponent<SpriteRenderer>();
         particleSys = GetComponentInChildren<ParticleSystem>();
         particleSys.Stop();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         anim.SetFloat("Speed", Mathf.Abs(rb2d.velocity.x)); // valor absolutod de la velocidad del eje x 
         anim.SetBool("Grounded", grounded);
         if (Input.GetKeyDown(KeyCode.UpArrow) && grounded) // para saltar con la flecha Arriba
@@ -51,6 +55,9 @@ public class PlayerController : MonoBehaviour {
         EfectuarAtaqueDeFuegoSiDebe();
 
         EnvenenarJugadorSiDebe();
+        ActivarCanvasCompraSiPuede();
+        CurarVidaSiDebe();
+        RegenerarManaSiDebe();
     }
 
     public void CorreccionDeVelocidad()
@@ -60,6 +67,32 @@ public class PlayerController : MonoBehaviour {
         if (grounded)
         {
             rb2d.velocity = fixedVelocity;
+        }
+    }
+
+    public void CurarVidaSiDebe(){
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            game.SendMessage("CurarPlayerSiDebe");
+        }
+
+    }
+
+    public void RegenerarManaSiDebe()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            game.SendMessage("RegenerarMana");
+        }
+    }
+
+
+    public void ActivarCanvasCompraSiPuede()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && puedeComprar && shoppigCanvas != null && !estaComprando)
+        {
+            shoppigCanvas.SetActive(true);
+            estaComprando = true;
         }
     }
 
@@ -98,7 +131,7 @@ public class PlayerController : MonoBehaviour {
     void EfectuarAtaqueSiDebe()
     {
         bool ataca = PlayerEnModoAtaque();
-        if (Input.GetMouseButtonDown(0) && ataca != true) // Detecta el click del boton derecho y efectua un ataque
+        if (Input.GetMouseButtonDown(0) && ataca != true && !estaComprando) // Detecta el click del boton derecho y efectua un ataque
         {
             movement = false;
             //ActivarDetectorParaAtaque();
@@ -113,7 +146,7 @@ public class PlayerController : MonoBehaviour {
     public void EfectuarAtaqueDeFuegoSiDebe()
     {
         bool ataca = PlayerEnModoAtaque();
-        if (Input.GetMouseButtonDown(1) && ataca != true && poseeMana) // Detecta el click del boton derecho y efectua un ataque
+        if (Input.GetMouseButtonDown(1) && ataca != true && poseeMana && !estaComprando) // Detecta el click del boton derecho y efectua un ataque
         {
             movement = false;
             //ActivarDetectorParaAtaque();
@@ -130,6 +163,11 @@ public class PlayerController : MonoBehaviour {
     public void NohayMasMana()
     {
         poseeMana = false;
+    }
+
+    public void TieneMana()
+    {
+        poseeMana = true;
     }
 
     void ActivarDetectorParaAtaque()
@@ -176,6 +214,19 @@ public class PlayerController : MonoBehaviour {
         //game.SendMessage("IncreasePoint", transform.position.y);
     }
 
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Estatua")
+        {
+            Debug.Log("YA NO Puedes Comprar");
+            puedeComprar = false;
+            shoppigCanvas.SetActive(false);
+            estaComprando = false;
+            //healhtbar.SendMessage("RecibirDanho", 2f);
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Wizard")
@@ -196,12 +247,12 @@ public class PlayerController : MonoBehaviour {
             DestruirAtaqueEnemigoSiDebe(collision.gameObject);
         }
 
-        /*if (collision.gameObject.tag == "Wizard")
+        if (collision.gameObject.tag == "Estatua")
         {
-            Debug.Log("Choco con Un Enemigo");
-            this.EstoyAtacando(collision.gameObject);
+            Debug.Log("Puedes Comprar");
+            puedeComprar = true;
             //healhtbar.SendMessage("RecibirDanho", 2f);
-        }*/
+        }
     }
 
     public void DestruirAtaqueEnemigoSiDebe(GameObject enemyAttack)
@@ -295,6 +346,25 @@ public class PlayerController : MonoBehaviour {
 
         ballObject.mov = transform.localScale;
 
+    }
+
+    public void ComprarSiPuede(int idItem)
+    {
+        if (idItem == 1)
+        {
+            game.SendMessage("ObtenerPocionDeVidaSiPuede");
+            Debug.Log("ComprandoUna Pocion De Vida");
+        }
+        if (idItem == 2)
+        {
+            game.SendMessage("ObtenerPocionDeManaSiPuede");
+        }
+
+        if (idItem == 3)
+        {
+            game.SendMessage("ObtenerMonedaACambioDeUnRubySiPuede");
+            Debug.Log("Cambiando Un Ruby Por Monedas");
+        }
     }
 
     void OnBecameInvisible()

@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\CoinController.cs" />
     <Compile Include="Assets\Scripts\DetectorDeSuelo.cs" />
     <Compile Include="Assets\Scripts\EnemyControler.cs" />
+    <Compile Include="Assets\Scripts\FunctionButton.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GeneratoFireController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />

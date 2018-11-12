@@ -7,9 +7,12 @@ public class BarraDeVidaController : MonoBehaviour {
 
     public Image health;
     public float hp, maxHp = 100f;
+
+    private Vector2 localScaleOrigin;
     // Use this for initialization
     void Start () {
         hp = maxHp;
+        localScaleOrigin = health.transform.localScale;
     }
 	
 	// Update is called once per frame
@@ -26,5 +29,11 @@ public class BarraDeVidaController : MonoBehaviour {
     public void CambiarColor(Color colorH )
     {
         health.color = colorH;
+    }
+
+    public void Curar()
+    {
+        hp = maxHp;
+        health.transform.localScale = localScaleOrigin;
     }
 }
