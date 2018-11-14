@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour {
         {
             jump = true;
         }
+        EfectuarAtaqueDeFuegoSiDebe();
     }
 
     void FixedUpdate()
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour {
         Movimientos();
         EfectuarSaltoSiDebe();
         EfectuarAtaqueSiDebe();
-        EfectuarAtaqueDeFuegoSiDebe();
+        
 
         EnvenenarJugadorSiDebe();
         ActivarCanvasCompraSiPuede();
@@ -154,7 +155,7 @@ public class PlayerController : MonoBehaviour {
             anim.SetTrigger("Attacking");
             CreationBallFire();
             Manabar.SendMessage("DisminuirMana", 25f);
-
+            print("tiro");
             Invoke("EnableMovement", 0.46f);
             //Invoke("ActivarDetectorParaAtaque", 0.46f);
         }
@@ -253,6 +254,22 @@ public class PlayerController : MonoBehaviour {
             puedeComprar = true;
             //healhtbar.SendMessage("RecibirDanho", 2f);
         }
+        if (collision.gameObject.tag == "pinches")
+        {
+            EnemyKnockBackPinches(collision.gameObject.transform.position.x);
+        }
+    }
+
+    public void EnemyKnockBackPinches(float enemyPosx)
+    {
+        jump = true;
+        float side = Mathf.Sign(enemyPosx - transform.position.x);
+        rb2d.AddForce(Vector2.left * side * jumpPower, ForceMode2D.Impulse); // Fisica del SALTO para atras 
+        movement = false;
+        Invoke("EnableMovement", 1f);
+        Color colour = new Color(19f, 111f, 60f);
+        sprt.color = Color.red;
+        RecibirDanho(25f);
     }
 
     public void DestruirAtaqueEnemigoSiDebe(GameObject enemyAttack)
