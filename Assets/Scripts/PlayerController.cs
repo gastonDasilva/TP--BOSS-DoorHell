@@ -49,16 +49,19 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate()
     {
-        CorreccionDeVelocidad();
-        Movimientos();
-        EfectuarSaltoSiDebe();
-        EfectuarAtaqueSiDebe();
-        
+        if (rb2d.bodyType != RigidbodyType2D.Static)
+        {
+            CorreccionDeVelocidad();
+            Movimientos();
+            EfectuarSaltoSiDebe();
+            EfectuarAtaqueSiDebe();
 
-        EnvenenarJugadorSiDebe();
-        ActivarCanvasCompraSiPuede();
-        CurarVidaSiDebe();
-        RegenerarManaSiDebe();
+
+            EnvenenarJugadorSiDebe();
+            ActivarCanvasCompraSiPuede();
+            CurarVidaSiDebe();
+            RegenerarManaSiDebe();
+        }
     }
 
     public void CorreccionDeVelocidad()
@@ -129,6 +132,34 @@ public class PlayerController : MonoBehaviour {
         bool ataca = stateInfo.IsName("Player_Attack");
         return ataca;
     }
+
+    public void ActivarMuerteDelJugador()
+    {
+        rb2d.bodyType = RigidbodyType2D.Static;
+        anim.SetTrigger("Die");
+        Collider2D[] colParent= GetComponents<Collider2D>();
+        Collider2D[] colChildren = GetComponentsInChildren<Collider2D>();
+        print(colChildren.Length);
+        print(colParent.Length);
+        SetAllCollidersStatus(false, colParent);
+        SetAllCollidersStatus(false, colChildren);
+        Invoke("ResetGame", 2f);
+    }
+
+    public void ResetGame()
+    {
+        game.SendMessage("ResetGame");
+    }
+
+    public void SetAllCollidersStatus(bool active, Collider2D[] colliders)
+    {
+
+        foreach (Collider2D c in colliders)
+        {
+            c.enabled = active;
+        }
+    }
+
     void EfectuarAtaqueSiDebe()
     {
         bool ataca = PlayerEnModoAtaque();

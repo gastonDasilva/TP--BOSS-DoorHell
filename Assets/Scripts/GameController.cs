@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
     public RawImage mountains;
@@ -141,5 +142,10 @@ public class GameController : MonoBehaviour {
         {
             Debug.Log("No tenes Pociones de Mana, Wacho");
         }
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Principal");
     }
 }

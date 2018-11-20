@@ -7,6 +7,7 @@ public class BarraDeVidaController : MonoBehaviour {
 
     public Image health;
     public float hp, maxHp = 100f;
+    public GameObject player;
 
     private Vector2 localScaleOrigin;
     // Use this for initialization
@@ -24,6 +25,10 @@ public class BarraDeVidaController : MonoBehaviour {
     {
         hp = Mathf.Clamp(hp - danho, 0f, maxHp);
         health.transform.localScale = new Vector2(hp / maxHp, 1);
+        if ( hp <= 0)
+        {
+            player.gameObject.SendMessage("ActivarMuerteDelJugador");
+        }
     }
 
     public void CambiarColor(Color colorH )

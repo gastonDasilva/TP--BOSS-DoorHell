@@ -5,6 +5,7 @@ using UnityEngine;
 public class GeneratoFireController : MonoBehaviour {
 
     public GameObject PrefabBallFire;
+    public float speedAttacking;
 
     private bool attacking;
     // Use this for initialization
@@ -15,7 +16,7 @@ public class GeneratoFireController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (!attacking) StartCoroutine(CreateBallOFAcid(1.5f));
+        if (!attacking) StartCoroutine(CreateBallOFAcid(speedAttacking));
   
     }
 
