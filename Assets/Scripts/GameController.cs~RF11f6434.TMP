@@ -1,0 +1,196 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class GameController : MonoBehaviour {
+    public RawImage mountains;
+    public RawImage graves;
+    public float parallaxVelocidad = 0.02f;
+    public Text pointText;
+    public Text pointTextRuby;
+    public Text cantTextPocionVida;
+    public Text cantTextPocionMana;
+    public GameObject healhtbar;
+    public GameObject Manabar;
+    public AudioClip clipPosion1;
+    public AudioClip clipPosion2;
+    public AudioClip clipPosion3;
+    public AudioClip clipCoin;
+    public AudioClip clipRuby;
+    public AudioClip ClipPosicionVida;
+    public AudioClip ClipPosicionMana;
+    public AudioClip ClipPosicionRubyXCoins;
+
+
+    private int points = 0;
+    private int pointsRuby = 0;
+    private int cantspocionVida = 0;
+    private int cantspocionMana = 0;
+    private AudioSource audioController;
+    // Use this for initialization
+    void Start () {
+        audioController = GetComponent<AudioSource>();
+
+
+    }
+	
+	// Update is called once per frame
+	void Update () {
+       
+
+    }
+    void FixedUpdate()
+    {
+        Parallax();
+    }
+
+    /*void Parallax()
+    {
+        float finalSpeed = parallaxVelocidad * Time.deltaTime;
+        mountains.uvRect = new Rect(mountains.uvRect.x + finalSpeed, 0f, 1f, 1f);
+        float finalSpeedGraves = (parallaxVelocidad +0.05f)* Time.deltaTime;
+        graves.uvRect = new Rect(graves.uvRect.x + finalSpeedGraves, 0f, 1f, 1f);
+
+    }*/
+
+    Transform GetCameraTransform()
+    {
+        return this.GetComponentInParent<Transform>();
+    }
+
+    void Parallax()
+    {
+        mountains.uvRect = new Rect(this.GetCameraTransform().position.x * 0.025f, 0f, 1f, 1f);
+        graves.uvRect = new Rect(this.GetCameraTransform().position.x * 0.04f, 0f, 1f, 1f);
+    }
+
+
+    public void IncreasePoint(int i)
+    {
+        if (i == 6)
+        {
+            IniciarAudio(clipRuby);
+            pointsRuby += 1;
+            pointTextRuby.text = pointsRuby.ToString();
+        }
+        else {
+            IniciarAudio(clipCoin);
+            points += i;
+            pointText.text = points.ToString();
+        }
+        
+
+        //SaveScore(points);
+    }
+
+    public void ObtenerPocionDeVidaSiPuede()
+    {
+        if (points >= 15)
+        {
+            IniciarAudio(ClipPosicionVida);
+            cantspocionVida += 1;
+            cantTextPocionVida.text = cantspocionVida.ToString();
+            Debug.Log("Puntos:" + points);
+            points = points - 15;
+            pointText.text = points.ToString();
+            Debug.Log("PuntosDespues:" + points);
+
+        }
+        else { Debug.Log("No tienes suficiente Dinero Para comprar ese Item"); }
+    }
+
+    public void ObtenerMonedaACambioDeUnRubySiPuede()
+    {
+        if (pointsRuby >= 1)
+        {
+            pointsRuby -= 1;
+            pointTextRuby.text = pointsRuby.ToString();
+            points += 20;
+            pointText.text = points.ToString();
+        }
+        else
+        {
+            Debug.Log("No tienes suficientes Rubys Para comprar ese Item");
+        }
+    }
+
+    public void ObtenerPocionDeManaSiPuede()
+    {
+        if (points >= 10)
+        {
+            cantspocionMana += 1;
+            cantTextPocionMana.text = cantspocionMana.ToString();
+            points = points - 10;
+            pointText.text = points.ToString();
+
+        }
+        else { Debug.Log("No tienes suficiente Dinero Para comprar ese Item"); 
+        }
+    }
+
+    public void CurarPlayerSiDebe()
+    {
+        if (cantspocionVida >= 1)
+        {
+            IniciarAudio(ObtenerClipDePosionRandom());
+            healhtbar.SendMessage("Curar");
+            cantspocionVida -= 1;
+            cantTextPocionVida.text = cantspocionVida.ToString();
+
+        }
+        else
+        {
+            Debug.Log("No tenes Pociones de Vida, Pedazo de tontin");
+        }
+    }
+
+    public void RegenerarMana()
+    {
+        if (cantspocionMana >=1)
+        {
+            IniciarAudio( ObtenerClipDePosionRandom());
+            Manabar.SendMessage("Curar");
+            cantspocionMana -= 1;
+            cantTextPocionMana.text = cantspocionMana.ToString();
+        }
+        else
+        {
+            Debug.Log("No tenes Pociones de Mana, Wacho");
+        }
+    }
+
+    public AudioClip ObtenerClipDePosionRandom()
+    {
+        System.Random rnd = new System.Random();
+        int rInt = rnd.Next(0, 3);
+        print("Posion:"+rInt);
+
+        switch (rInt)
+        {
+            case 0:
+                return clipPosion1;
+            case 1:
+                return clipPosion2;
+            case 2:
+                return clipPosion3;
+
+            default:
+                break;
+
+        }
+        return clipPosion1;
+    }
+
+    public void IniciarAudio(AudioClip clip)
+    {
+        audioController.clip = clip;
+        audioController.Play();
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Principal");
+    }
+}

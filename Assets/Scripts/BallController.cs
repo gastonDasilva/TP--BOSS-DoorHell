@@ -39,6 +39,7 @@ public class BallController : MonoBehaviour {
         {
             Debug.Log("LLEGO AL PLAYER");
             collision.gameObject.SendMessage("EfecuarEnvenamientoPorUnTiempo",8f);
+            collision.gameObject.SendMessage("RecibirDanho", 1f);
             BallDestroy();
         }
     }

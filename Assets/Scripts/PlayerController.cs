@@ -14,6 +14,14 @@ public class PlayerController : MonoBehaviour {
     public GameObject ballFire;
     public Camera mainCamera;
     public GameObject shoppigCanvas;
+    public AudioClip dieClip;
+    public AudioClip clipHurt1;
+    public AudioClip clipHurt2;
+    public AudioClip clipHurt3;
+    public AudioClip clipHurt4;
+    public AudioClip clipHurt5;
+    public AudioClip clipHit;
+
 
     private ParticleSystem particleSys;
     private Rigidbody2D rb2d;
@@ -25,6 +33,7 @@ public class PlayerController : MonoBehaviour {
     private bool puedeComprar;
     private bool estaComprando;
     private SpriteRenderer sprt;
+    private AudioSource audioController;
 
 
     // Use this for initialization
@@ -32,19 +41,23 @@ public class PlayerController : MonoBehaviour {
         rb2d = GetComponent<Rigidbody2D>(); // detecta automaticamente el rigidbody
         anim = GetComponent<Animator>();// detecta automaticamente el animator, para gestionar las animaciones
         sprt = GetComponent<SpriteRenderer>();
+        audioController = GetComponent<AudioSource>();
         particleSys = GetComponentInChildren<ParticleSystem>();
         particleSys.Stop();
     }
 
     // Update is called once per frame
     void Update() {
-        anim.SetFloat("Speed", Mathf.Abs(rb2d.velocity.x)); // valor absolutod de la velocidad del eje x 
-        anim.SetBool("Grounded", grounded);
-        if (Input.GetKeyDown(KeyCode.UpArrow) && grounded) // para saltar con la flecha Arriba
+        if (rb2d.bodyType != RigidbodyType2D.Static)
         {
-            jump = true;
+            anim.SetFloat("Speed", Mathf.Abs(rb2d.velocity.x)); // valor absolutod de la velocidad del eje x 
+            anim.SetBool("Grounded", grounded);
+            if (Input.GetKeyDown(KeyCode.UpArrow) && grounded) // para saltar con la flecha Arriba
+            {
+                jump = true;
+            }
+            EfectuarAtaqueDeFuegoSiDebe();
         }
-        EfectuarAtaqueDeFuegoSiDebe();
     }
 
     void FixedUpdate()
@@ -143,6 +156,7 @@ public class PlayerController : MonoBehaviour {
         print(colParent.Length);
         SetAllCollidersStatus(false, colParent);
         SetAllCollidersStatus(false, colChildren);
+        PlayClip(dieClip);
         Invoke("ResetGame", 2f);
     }
 
@@ -169,7 +183,7 @@ public class PlayerController : MonoBehaviour {
             //ActivarDetectorParaAtaque();
             //UpdateState("Player_Attack");
             anim.SetTrigger("Attacking");
-
+            PlayClip(clipHit);
             Invoke("EnableMovement", 0.46f);
             //Invoke("ActivarDetectorParaAtaque", 0.46f);
         }
@@ -346,9 +360,11 @@ public class PlayerController : MonoBehaviour {
 
     public void RecibirDanho(float danho)
     {
+        PlayClip(ObtenerClipHurtRandom());
         healhtbar.SendMessage("RecibirDanho", danho);
         ProducirAturdimientoDeCamera();
     }
+
 
     public void ProducirAturdimientoDeCamera()
     {
@@ -413,6 +429,36 @@ public class PlayerController : MonoBehaviour {
             game.SendMessage("ObtenerMonedaACambioDeUnRubySiPuede");
             Debug.Log("Cambiando Un Ruby Por Monedas");
         }
+    }
+
+    public void PlayClip(AudioClip clip)
+    {
+        audioController.clip = clip;
+        audioController.Play();
+    }
+
+    public AudioClip ObtenerClipHurtRandom()
+    {
+        System.Random rnd = new System.Random();
+        int rInt = rnd.Next(0, 5);
+        print(rInt);
+        switch (rInt)
+        {
+            case 0:
+                return clipHurt1;
+            case 1:
+                return clipHurt2;
+            case 2:
+                return clipHurt3;
+            case 3:
+                return clipHurt4;
+            case 4:
+                return clipHurt5;
+            default:
+                break;
+        }
+
+        return clipHurt1;
     }
 
     void OnBecameInvisible()

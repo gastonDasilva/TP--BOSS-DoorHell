@@ -11,7 +11,10 @@ public class WizardController : MonoBehaviour {
     public GameObject coinPreFab05;
     public GameObject coinPreFab04;
     public GameObject rubyPreFab;
-   
+    public AudioClip clipDie;
+    public AudioClip clipHurt;
+    public AudioClip clipShoot;
+
 
 
     private GameObject playerFollow;
@@ -22,6 +25,7 @@ public class WizardController : MonoBehaviour {
     Rigidbody2D r2bd;
     private PolygonCollider2D polcol;
     private int cantLife = 2;
+    private AudioSource audioController;
 
     // Use this for initialization
     void Start () {
@@ -30,6 +34,7 @@ public class WizardController : MonoBehaviour {
         polcol = GetComponentInChildren<PolygonCollider2D>();
         anim = GetComponent<Animator>();
         r2bd = GetComponent<Rigidbody2D>();
+        audioController = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
@@ -116,6 +121,7 @@ public class WizardController : MonoBehaviour {
         anim.SetBool("Hurt", true);
         cantLife -= 1;
         r2bd.bodyType = RigidbodyType2D.Static;
+        PlayClip(clipHurt);
         Invoke("WizardHurtStop",0.40f);
     }
 
@@ -149,8 +155,7 @@ public class WizardController : MonoBehaviour {
             GeneratorCoins();
         }
         anim.SetTrigger("Die");
-        //audioEnemy.clip = clipEnemyDie;
-        //audioEnemy.Play();
+        PlayClip(clipDie);
         Invoke("DestroyEnemy", 1.35f);
         polcol.enabled = !polcol.enabled; // desactiva la colision contra el player }
     }
@@ -178,6 +183,7 @@ public class WizardController : MonoBehaviour {
         attacking = true;
         if (PrefabBallAcid != null)
         {
+            PlayClip(clipShoot);
             CreateInstanceBallAcid(direccion);
             puedeCrearInstancias = true;
             yield return new WaitForSeconds(seconds);
@@ -217,6 +223,11 @@ public class WizardController : MonoBehaviour {
 
         };
         return obj;
+    }
+    public void PlayClip(AudioClip clip)
+    {
+        audioController.clip = clip;
+        audioController.Play();
     }
 
 

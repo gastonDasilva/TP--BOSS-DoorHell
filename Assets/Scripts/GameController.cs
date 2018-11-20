@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,15 +14,25 @@ public class GameController : MonoBehaviour {
     public Text cantTextPocionMana;
     public GameObject healhtbar;
     public GameObject Manabar;
+    public AudioClip clipPosion1;
+    public AudioClip clipPosion2;
+    public AudioClip clipPosion3;
+    public AudioClip clipCoin;
+    public AudioClip clipRuby;
+    public AudioClip clipClickPosion;
+    public AudioClip clipClikCoinsXRuby;
 
     private int points = 0;
     private int pointsRuby = 0;
     private int cantspocionVida = 0;
     private int cantspocionMana = 0;
+    private AudioSource audioController;
     // Use this for initialization
     void Start () {
-		
-	}
+
+        audioController = GetComponent<AudioSource>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -40,7 +50,6 @@ public class GameController : MonoBehaviour {
         mountains.uvRect = new Rect(mountains.uvRect.x + finalSpeed, 0f, 1f, 1f);
         float finalSpeedGraves = (parallaxVelocidad +0.05f)* Time.deltaTime;
         graves.uvRect = new Rect(graves.uvRect.x + finalSpeedGraves, 0f, 1f, 1f);
-
     }*/
 
     Transform GetCameraTransform()
@@ -54,15 +63,42 @@ public class GameController : MonoBehaviour {
         graves.uvRect = new Rect(this.GetCameraTransform().position.x * 0.04f, 0f, 1f, 1f);
     }
 
+    public void PlayClip(AudioClip clip)
+    {
+        audioController.clip = clip;
+        audioController.Play();
+    }
+
+    public AudioClip ObtenerClipPosionRandom()
+    {
+        System.Random rnd = new System.Random();
+        int rInt = rnd.Next(0, 3);
+        print(rInt);
+        switch (rInt)
+        {
+            case 0:
+                return clipPosion1;
+            case 1:
+                return clipPosion2;
+            case 2:
+                return clipPosion3;
+            default:
+                break;
+        }
+
+        return clipPosion1;
+    }
 
     public void IncreasePoint(int i)
     {
         if (i == 6)
         {
+            PlayClip(clipRuby);
             pointsRuby += 1;
             pointTextRuby.text = pointsRuby.ToString();
         }
         else {
+            PlayClip(clipCoin);
             points += i;
             pointText.text = points.ToString();
         }
@@ -75,6 +111,7 @@ public class GameController : MonoBehaviour {
     {
         if (points >= 15)
         {
+            PlayClip(clipClickPosion);
             cantspocionVida += 1;
             cantTextPocionVida.text = cantspocionVida.ToString();
             Debug.Log("Puntos:" + points);
@@ -90,6 +127,7 @@ public class GameController : MonoBehaviour {
     {
         if (pointsRuby >= 1)
         {
+            PlayClip(clipClikCoinsXRuby);
             pointsRuby -= 1;
             pointTextRuby.text = pointsRuby.ToString();
             points += 20;
@@ -105,6 +143,7 @@ public class GameController : MonoBehaviour {
     {
         if (points >= 10)
         {
+            PlayClip(clipClickPosion);
             cantspocionMana += 1;
             cantTextPocionMana.text = cantspocionMana.ToString();
             points = points - 10;
@@ -119,6 +158,7 @@ public class GameController : MonoBehaviour {
     {
         if (cantspocionVida >= 1)
         {
+            PlayClip(ObtenerClipPosionRandom());
             healhtbar.SendMessage("Curar");
             cantspocionVida -= 1;
             cantTextPocionVida.text = cantspocionVida.ToString();
@@ -134,6 +174,7 @@ public class GameController : MonoBehaviour {
     {
         if (cantspocionMana >=1)
         {
+            PlayClip(ObtenerClipPosionRandom());
             Manabar.SendMessage("Curar");
             cantspocionMana -= 1;
             cantTextPocionMana.text = cantspocionMana.ToString();
@@ -148,4 +189,4 @@ public class GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("Principal");
     }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

@@ -11,17 +11,20 @@ public class EnemyControler : MonoBehaviour {
     public GameObject CoinPreFab04 = null;
     public GameObject CoinPreFab05 = null;
     public int tipoDeEnemigo;
+    public AudioClip enemyDieClip;
 
 
     private Rigidbody2D rb2d;
     private Animator anim;
     private bool precipicio = false;
     private PolygonCollider2D polcol;
+    private AudioSource audioController;
     // Use this for initialization
     void Start () {
         rb2d = GetComponent<Rigidbody2D>(); // detecta automaticamente el rigidbody
         anim = GetComponent<Animator>();// detecta automaticamente el animator, para gestionar las animaciones
         polcol = GetComponentInChildren<PolygonCollider2D>();
+        audioController = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
@@ -104,7 +107,9 @@ public class EnemyControler : MonoBehaviour {
         anim.SetTrigger("Died");
         //audioEnemy.clip = clipEnemyDie;
         //audioEnemy.Play();
-        Invoke("DestroyEnemy", 1f);
+        audioController.clip = enemyDieClip;
+        audioController.Play();
+        Invoke("DestroyEnemy", 0.7f);
         polcol.enabled = !polcol.enabled; // desactiva la colision contra el player 
     }
 
