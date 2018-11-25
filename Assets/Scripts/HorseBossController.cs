@@ -7,6 +7,7 @@ public class HorseBossController : MonoBehaviour {
     public float maxSpeed;
     public float speed;
     public GameObject healhtbarBoss;
+    public GameObject gestionadorDelFinal;
 
     private Color flashColour = new Color(1f, 0f, 0f, 255f); //0.1f
     private Color flashColourEnd = new Color(1f, 0f, 0f, 0.2f); //0.1f
@@ -57,9 +58,7 @@ public class HorseBossController : MonoBehaviour {
     {
         if (precipicio) // si choca con un precipicio  Entra al if
         {
-            print("VelocidadAntes:" + speed);
             speed = -speed;
-            print("Velocidad:"+speed);
             rb2d.velocity = new Vector2(speed, rb2d.velocity.y);
             CambiarDireccionDependiendo(transform.localScale.x);
             precipicio = false;
@@ -128,6 +127,13 @@ public class HorseBossController : MonoBehaviour {
         deadFlash = true;       
         print("El Horse Se murio");
         Invoke("BarEnabled",5f);
+        Invoke("inicioDeFinal", 5f);
+        
+    }
+
+    public void inicioDeFinal()
+    {
+        gestionadorDelFinal.SendMessage("AbrirCofre");
 
     }
 

@@ -70,6 +70,31 @@ public class CoinController : MonoBehaviour {
         DestroyCoin();
     }
 
+    public void ImpulseCoin()
+    {
+        System.Random rnd = new System.Random();
+        int rInt = rnd.Next(0, 2);
+        int dirRInt = rnd.Next(0, 2);
+        rb2d = GetComponent<Rigidbody2D>();
+        //float side = Mathf.Sign((transform.position.x +2) - transform.position.x);
+        rb2d.AddForce(DireccionDeImpulsoRandom(dirRInt) * rInt * 5f, ForceMode2D.Impulse); // Fisica del SALTO para atras
+    }
+
+    public Vector2 DireccionDeImpulsoRandom(int n)
+    {
+        switch (n)
+        {
+            case 0:
+                return Vector2.left;
+            case 1:
+                return Vector2.right;
+            default:
+                break;
+        }
+
+        return Vector2.left;
+    }
+
     void DestroyCoin()
     {
         Destroy(this.gameObject);

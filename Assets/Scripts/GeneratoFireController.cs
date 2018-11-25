@@ -38,5 +38,6 @@ public class GeneratoFireController : MonoBehaviour {
         Quaternion TransformRotation = PrefabBallFire.transform.rotation;
         GameObject instantiateBall = Instantiate(PrefabBallFire, transformUpdate, TransformRotation);
         BallController ballObject = instantiateBall.GetComponent<BallController>();
+        Destroy(instantiateBall,8f);
     }
 }

@@ -312,6 +312,7 @@ public class PlayerController : MonoBehaviour {
         if (collision.gameObject.tag == "BossBar")
         {
             game.SendMessage("EnabledBossBar");
+            collision.enabled = false;
         }
     }
 
@@ -473,6 +474,7 @@ public class PlayerController : MonoBehaviour {
 
     void OnBecameInvisible()
     {
-        transform.position = new Vector3(-8f, 0f, 0f);
+        //transform.position = new Vector3(-8f, 0f, 0f);
+        game.SendMessage("ResetGame");
     }
 }
