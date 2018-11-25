@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour {
     public Text cantTextPocionMana;
     public GameObject healhtbar;
     public GameObject Manabar;
+    public GameObject bossbar;
     public AudioClip clipPosion1;
     public AudioClip clipPosion2;
     public AudioClip clipPosion3;
@@ -183,6 +184,11 @@ public class GameController : MonoBehaviour {
         {
             Debug.Log("No tenes Pociones de Mana, Wacho");
         }
+    }
+
+    public void EnabledBossBar()
+    {
+        bossbar.SetActive(true);
     }
 
     public void ResetGame()

@@ -173,6 +173,7 @@ public class WizardController : MonoBehaviour {
             }
 
             GameObject instantiateBall = Instantiate(PrefabBallAcid, transformUpdate, Quaternion.identity);
+            PlayClip(clipShoot);
             BallController ballObject = instantiateBall.GetComponent<BallController>();
             ballObject.mov = direccion;
         }
@@ -183,7 +184,7 @@ public class WizardController : MonoBehaviour {
         attacking = true;
         if (PrefabBallAcid != null)
         {
-            PlayClip(clipShoot);
+            
             CreateInstanceBallAcid(direccion);
             puedeCrearInstancias = true;
             yield return new WaitForSeconds(seconds);

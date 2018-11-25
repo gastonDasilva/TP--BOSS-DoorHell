@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\FunctionButton.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\GeneratoFireController.cs" />
+    <Compile Include="Assets\Scripts\HorseBossController.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MusicController.cs" />
     <Compile Include="Assets\Scripts\pinchesController.cs" />

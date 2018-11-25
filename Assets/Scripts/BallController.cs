@@ -30,7 +30,7 @@ public class BallController : MonoBehaviour {
 
      void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Wizard" && !soyBolaDeAcido)
+        if(collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Wizard" && !soyBolaDeAcido || collision.gameObject.tag == "HorseEnemy")
         {
             BallDestroy();
         }

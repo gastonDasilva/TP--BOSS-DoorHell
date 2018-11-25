@@ -137,14 +137,14 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
-    - _FaceColor: {r: 0.764151, g: 0.6532498, b: 0.032440357, a: 1}
+    - _FaceColor: {r: 0.754717, g: 0.10939071, b: 0.08899963, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
-    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.017579278, g: 0, b: 0.4056604, a: 1}
     - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _UnderlayColor: {r: 0.6886792, g: 0.07471521, b: 0.29893196, a: 0.75686276}
+    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.75686276}
 --- !u!28 &2846298
 Texture2D:
   m_ObjectHideFlags: 1

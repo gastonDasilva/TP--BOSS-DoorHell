@@ -303,6 +303,16 @@ public class PlayerController : MonoBehaviour {
         {
             EnemyKnockBackPinches(collision.gameObject.transform.position.x);
         }
+        if (collision.gameObject.tag == "HorseEnemy")
+        {
+            print("Horse Boss te toco");
+            EnemyKnockBackPinches(collision.gameObject.transform.position.x);
+        }
+
+        if (collision.gameObject.tag == "BossBar")
+        {
+            game.SendMessage("EnabledBossBar");
+        }
     }
 
     public void EnemyKnockBackPinches(float enemyPosx)
