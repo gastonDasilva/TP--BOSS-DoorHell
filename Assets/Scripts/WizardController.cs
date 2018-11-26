@@ -201,7 +201,6 @@ public class WizardController : MonoBehaviour {
     {// Objeto a Instanciar, posicion actual del gameObject, variable necesaria para el instantiate
         System.Random rnd = new System.Random();
         int rInt = rnd.Next(0, 6);
-        Debug.Log(rInt);
         Vector3 transformUpdate = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         if(rInt <=2) Instantiate(GenerarCoinAleatorio(rInt), transformUpdate, Quaternion.identity);
 

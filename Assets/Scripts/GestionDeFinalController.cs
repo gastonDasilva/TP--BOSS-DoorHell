@@ -9,6 +9,7 @@ public class GestionDeFinalController : MonoBehaviour {
     public GameObject cofre;
     public GameObject skull1;
     public GameObject skull2;
+    public GameObject paredesInvisibles;
     // Use this for initialization
     void Start () {
 		
@@ -25,10 +26,19 @@ public class GestionDeFinalController : MonoBehaviour {
         Invoke("StartOpenChest", 3.4f);
         skull1.SendMessage("EnableStart");
         skull2.SendMessage("EnableStart");
+        EnabledColliders(paredesInvisibles.GetComponentsInChildren<EdgeCollider2D>(), false);
     }
 
     public void StartOpenChest()
     {
         cofre.SendMessage("StartOpenChest");
+    }
+
+    public void EnabledColliders(Collider2D[] colliders, bool b)
+    {
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = b;
+        }
     }
 }

@@ -29,6 +29,8 @@ public class HorseBossController : MonoBehaviour {
         anim = GetComponent<Animator>();
         origionalColor = damageImage.color;
         transform.localScale = new Vector3(-1f, 1f, 1f);
+        anim.SetTrigger("Die");
+        rb2d.bodyType = RigidbodyType2D.Static;
 
 
     }
@@ -42,6 +44,13 @@ public class HorseBossController : MonoBehaviour {
 
 
     }
+
+    public void StartBoss()
+    {
+        rb2d.bodyType = RigidbodyType2D.Dynamic;
+        anim.SetTrigger("Start");
+    }
+
     void GestionDeMovimiento()
 
     {
@@ -110,7 +119,7 @@ public class HorseBossController : MonoBehaviour {
     public void takeDamage()
     {
         damaged = true;
-        healhtbarBoss.SendMessage("RecibirDanho", 12.5f); // 12.5f
+        healhtbarBoss.SendMessage("RecibirDanho",17f); //17f
     }
 
     void ResetColor()

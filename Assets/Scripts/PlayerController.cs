@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour {
     public AudioClip clipHurt4;
     public AudioClip clipHurt5;
     public AudioClip clipHit;
+    public AudioClip clipHitMagic;
 
 
     private ParticleSystem particleSys;
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour {
     private bool estaComprando;
     private SpriteRenderer sprt;
     private AudioSource audioController;
+    private GameController gameController;
 
 
     // Use this for initialization
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour {
         audioController = GetComponent<AudioSource>();
         particleSys = GetComponentInChildren<ParticleSystem>();
         particleSys.Stop();
+        gameController = game.GetComponent<GameController>();
     }
 
     // Update is called once per frame
@@ -177,7 +180,7 @@ public class PlayerController : MonoBehaviour {
     void EfectuarAtaqueSiDebe()
     {
         bool ataca = PlayerEnModoAtaque();
-        if (Input.GetMouseButtonDown(0) && ataca != true && !estaComprando) // Detecta el click del boton derecho y efectua un ataque
+        if (Input.GetMouseButtonDown(0) && ataca != true && !estaComprando && movement) // Detecta el click del boton derecho y efectua un ataque
         {
             movement = false;
             //ActivarDetectorParaAtaque();
@@ -192,15 +195,15 @@ public class PlayerController : MonoBehaviour {
     public void EfectuarAtaqueDeFuegoSiDebe()
     {
         bool ataca = PlayerEnModoAtaque();
-        if (Input.GetMouseButtonDown(1) && ataca != true && poseeMana && !estaComprando) // Detecta el click del boton derecho y efectua un ataque
+        if (Input.GetMouseButtonDown(1) && ataca != true && poseeMana && !estaComprando && movement) // Detecta el click del boton derecho y efectua un ataque
         {
             movement = false;
             //ActivarDetectorParaAtaque();
             //UpdateState("Player_Attack");
             anim.SetTrigger("Attacking");
             CreationBallFire();
+            PlayClip(clipHitMagic);
             Manabar.SendMessage("DisminuirMana", 25f);
-            print("tiro");
             Invoke("EnableMovement", 0.46f);
             //Invoke("ActivarDetectorParaAtaque", 0.46f);
         }
@@ -281,12 +284,6 @@ public class PlayerController : MonoBehaviour {
             this.EstoyAtacando(collision.gameObject);
             //healhtbar.SendMessage("RecibirDanho", 2f);
         }
-        if (collision.gameObject.tag == "Coin")
-        {
-            collision.gameObject.transform.parent.SendMessage("CantidadDePuntosPorMonedas",game);
-            collision.gameObject.transform.parent.SendMessage("GestionarRecoleccion");
-            Debug.Log("Coin!!!");
-        }
 
         if (collision.gameObject.tag == "BallAcid")
         {
@@ -313,6 +310,17 @@ public class PlayerController : MonoBehaviour {
         {
             game.SendMessage("EnabledBossBar");
             collision.enabled = false;
+            EdgeCollider2D[]  colliders= collision.gameObject.GetComponentsInChildren<EdgeCollider2D>();
+            EnabledColliders(colliders);
+            
+        }
+    }
+
+    public void EnabledColliders(Collider2D[] colliders)
+    {
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = true;
         }
     }
 
@@ -474,7 +482,8 @@ public class PlayerController : MonoBehaviour {
 
     void OnBecameInvisible()
     {
-        //transform.position = new Vector3(-8f, 0f, 0f);
-        game.SendMessage("ResetGame");
+        transform.position = new Vector3(-8f, 0f, 0f);
+        //game.SendMessage("ResetGame");
+        //gameController.ResetGame();
     }
 }

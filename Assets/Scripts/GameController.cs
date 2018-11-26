@@ -22,16 +22,21 @@ public class GameController : MonoBehaviour {
     public AudioClip clipRuby;
     public AudioClip clipClickPosion;
     public AudioClip clipClikCoinsXRuby;
+    public GameObject horseBoss;
 
     private int points = 0;
     private int pointsRuby = 0;
     private int cantspocionVida = 0;
     private int cantspocionMana = 0;
     private AudioSource audioController;
+    private MusicController musicController;
+    private HorseBossController horseController;
     // Use this for initialization
     void Start () {
 
         audioController = GetComponent<AudioSource>();
+        musicController = GetComponentInChildren<MusicController>();
+        horseController = horseBoss.GetComponent<HorseBossController>();
 
     }
 	
@@ -45,13 +50,6 @@ public class GameController : MonoBehaviour {
         Parallax();
     }
 
-    /*void Parallax()
-    {
-        float finalSpeed = parallaxVelocidad * Time.deltaTime;
-        mountains.uvRect = new Rect(mountains.uvRect.x + finalSpeed, 0f, 1f, 1f);
-        float finalSpeedGraves = (parallaxVelocidad +0.05f)* Time.deltaTime;
-        graves.uvRect = new Rect(graves.uvRect.x + finalSpeedGraves, 0f, 1f, 1f);
-    }*/
 
     Transform GetCameraTransform()
     {
@@ -189,6 +187,9 @@ public class GameController : MonoBehaviour {
     public void EnabledBossBar()
     {
         bossbar.SetActive(true);
+        musicController.StartMusicBoss();
+        horseController.StartBoss();
+
     }
 
     public void ResetGame()

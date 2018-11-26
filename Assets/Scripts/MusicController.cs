@@ -5,6 +5,7 @@ using UnityEngine;
 public class MusicController : MonoBehaviour {
 
     public AudioClip musicClip;
+    public AudioClip musicClipBoss;
 
     private AudioSource audioController;
 
@@ -20,4 +21,10 @@ public class MusicController : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void StartMusicBoss()
+    {
+        audioController.clip = musicClipBoss;
+        audioController.Play();
+    }
 }

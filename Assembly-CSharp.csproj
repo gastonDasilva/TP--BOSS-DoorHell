@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\CameraShake.cs" />
     <Compile Include="Assets\Scripts\CofreController.cs" />
     <Compile Include="Assets\Scripts\CoinController.cs" />
+    <Compile Include="Assets\Scripts\CoinsRecolectController.cs" />
     <Compile Include="Assets\Scripts\DetectorDeSuelo.cs" />
     <Compile Include="Assets\Scripts\EnemyControler.cs" />
     <Compile Include="Assets\Scripts\FunctionButton.cs" />
